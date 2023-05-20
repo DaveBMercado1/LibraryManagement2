@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <h2 th:text="Borrower ${borrowerForm.id == null ? 'Registration' : 'Edit'}"></h2>
+        <form th:action="@{/borrower/save}" th:object="${borrowerForm}" method="post">
+            <input type="hidden" th:field="*{id}" name="id" id="id">
+            <input type="text" th:field="*{name}" name="name" id="name">
+            <input type="text" th:field="*{email}" name="email" id="email">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>
