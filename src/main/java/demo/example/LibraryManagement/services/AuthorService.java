@@ -28,11 +28,13 @@ public class AuthorService {
         return authorRepository.findOne(AuthorSpecification.name(name)).get();
     }
 
-    public Author save(AuthorForm authorForm) {
-        Author author = new Author();
-        author.setName(authorForm.getName());
+    public AuthorForm getForm(int id) {
+        return new AuthorForm(getById(id));
+    }
 
-        return authorRepository.save(author);
+    public Author save(AuthorForm authorForm) {
+        Author author = authorForm.getId() == null ? null : getById(authorForm.getId());
+        return save(authorForm.toEntity(author));
     }
 
     public Author save(Author author) {

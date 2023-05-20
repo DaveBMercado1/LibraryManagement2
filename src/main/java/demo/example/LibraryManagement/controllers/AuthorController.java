@@ -3,15 +3,12 @@ package demo.example.LibraryManagement.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import demo.example.LibraryManagement.entities.Author;
@@ -34,29 +31,29 @@ public class AuthorController {
         return "/views/author/index";
     }
 
-    @GetMapping("/{name}")
-    public String details(@PathVariable("name") String name, Model model) {
-        List<Author> authors = authorService.getAll();
-        model.addAttribute("authors", authors);
-        return "/views/author/details";
+    @GetMapping("/register")
+    public String register(Model model) {
+        model.addAttribute("authorForm", new AuthorForm());
+        return "/views/author/edit";
+    }
+
+    @GetMapping("/update/{id}")
+    public String update(@PathVariable int id, Model model) {
+        AuthorForm authorForm = authorService.getForm(id);
+        model.addAttribute("authorForm", authorForm);
+        return "/views/author/edit";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable int id) {
+        authorService.delete(id);
+        return String.format("redirect:/%s", "author");
     }
 
     @PostMapping("/save")
-    public Author save(@RequestBody AuthorForm authorForm) {
-        return authorService.save(authorForm);
-    }
-
-    @PutMapping("/update")
-    public Author update(@Param("id") Integer id, @RequestBody AuthorForm authorForm) {
-        Author author = authorService.getById(id);
-        author.setName(authorForm.getName());
-        return authorService.save(author);
-    }
-
-    @DeleteMapping("/delete")
-    public List<Author> delete(@Param("id") Integer id) {
-        authorService.delete(id);
-        return authorService.getAll();
+    public String save(@ModelAttribute AuthorForm authorForm) {
+        authorService.save(authorForm);
+        return String.format("redirect:/%s", "author");
     }
 
 }
